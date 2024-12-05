@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
-    private String token;
+    private String token;   // Contains the JWT token if successful
+    private String message; // Contains an error message if there’s an issue
 }

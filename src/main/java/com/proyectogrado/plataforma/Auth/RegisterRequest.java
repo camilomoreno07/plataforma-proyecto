@@ -1,5 +1,6 @@
 package com.proyectogrado.plataforma.Auth;
 
+import com.proyectogrado.plataforma.Entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class RegisterRequest {
     String firstname;
     String lastname;
     String country;
+    Role role;
 
 }

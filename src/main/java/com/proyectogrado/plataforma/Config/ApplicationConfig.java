@@ -1,6 +1,6 @@
 package com.proyectogrado.plataforma.Config;
 
-import com.proyectogrado.plataforma.User.UserRepository;
+import com.proyectogrado.plataforma.Entities.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

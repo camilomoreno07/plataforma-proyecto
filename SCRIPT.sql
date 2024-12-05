@@ -1,11 +1,10 @@
-CREATE TABLE universidad.NewTable (
-	id INT auto_increment NOT NULL,
-	username varchar(100) NOT NULL,
-	lastname varchar(100) NULL,
-	firstname varchar(100) NULL,
-	country varchar(100) NULL,
-	password varchar(100) NULL,
-	`role` ENUM NULL,
+CREATE TABLE `universidad`.`user` (
+  `id` INT auto_increment NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
+  `lastname` VARCHAR(45) NULL,
+  `firstname` VARCHAR(45) NULL,
+  `password` VARCHAR(100) NULL,
+    `role` ENUM ('ADMIN', 'TEACHER', 'STUDENT') NOT NULL,
 	CONSTRAINT NewTable_PK PRIMARY KEY (id),
 	CONSTRAINT NewTable_UNIQUE UNIQUE KEY (username)
 )

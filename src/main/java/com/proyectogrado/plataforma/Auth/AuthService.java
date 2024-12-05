@@ -1,14 +1,14 @@
 package com.proyectogrado.plataforma.Auth;
 
 import com.proyectogrado.plataforma.Jwt.JwtService;
-import com.proyectogrado.plataforma.User.Role;
-import com.proyectogrado.plataforma.User.User;
-import com.proyectogrado.plataforma.User.UserRepository;
+import com.proyectogrado.plataforma.Entities.User;
+import com.proyectogrado.plataforma.Entities.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,34 +22,53 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
+        try {
+            // Attempt to authenticate the user
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
 
-        // Intentar autenticar al usuario
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        // Buscar el usuario en la base de datos
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow(); // Lanzará UsernameNotFoundException si no se encuentra el usuario
-        // Generar el token JWT
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
-    }
+            // Fetch the user from the database
+            UserDetails user = userRepository.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found."));
 
-
-    public AuthResponse register(RegisterRequest request) {
-
-            User user = User.builder()
-                    .username(request.getUsername())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .country(request.getCountry())
-                    .role(Role.USER)
-                    .build();
-
-            userRepository.save(user);
+            // Generate and return the token
+            String token = jwtService.getToken(user);
 
             return AuthResponse.builder()
-                    .token(jwtService.getToken(user))
+                    .token(token)
+                    .message("") // No message in successful login
                     .build();
+
+        } catch (AuthenticationException e) {
+            return AuthResponse.builder()
+                    .token("") // Empty token since authentication failed
+                    .message("Invalid username or password.")
+                    .build();
+        }
+    }
+
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            return AuthResponse.builder()
+                    .token("") // Empty token since registration failed
+                    .message("Email (username) already taken. Please choose a different one.")
+                    .build();
+        }
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .role(request.getRole())
+                .build();
+
+        userRepository.save(user);
+
+        return AuthResponse.builder()
+                .token(jwtService.getToken(user))
+                .message("") // No message in successful registration
+                .build();
     }
 }

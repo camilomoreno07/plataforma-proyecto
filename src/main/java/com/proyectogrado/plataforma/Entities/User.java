@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.User;
+package com.proyectogrado.plataforma.Entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,6 @@ public class User implements UserDetails {
 
     String lastname;
     String firstname;
-    String country;
     String password;
 
     @Enumerated(EnumType.STRING)
