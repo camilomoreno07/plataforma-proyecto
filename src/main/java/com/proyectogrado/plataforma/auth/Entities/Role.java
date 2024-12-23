@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.Entities;
+package com.proyectogrado.plataforma.auth.Entities;
 
 public enum Role {
     ADMIN,

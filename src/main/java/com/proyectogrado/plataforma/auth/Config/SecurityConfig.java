@@ -1,6 +1,6 @@
-package com.proyectogrado.plataforma.Config;
+package com.proyectogrado.plataforma.auth.Config;
 
-import com.proyectogrado.plataforma.Jwt.JwtAuthenticationFilter;
+import com.proyectogrado.plataforma.auth.Jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

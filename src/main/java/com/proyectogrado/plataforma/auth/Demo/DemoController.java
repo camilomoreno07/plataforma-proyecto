@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.Demo;
+package com.proyectogrado.plataforma.auth.Demo;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

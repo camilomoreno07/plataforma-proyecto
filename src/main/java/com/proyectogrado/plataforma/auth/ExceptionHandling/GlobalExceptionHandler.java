@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.ExceptionHandling;
+package com.proyectogrado.plataforma.auth.ExceptionHandling;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

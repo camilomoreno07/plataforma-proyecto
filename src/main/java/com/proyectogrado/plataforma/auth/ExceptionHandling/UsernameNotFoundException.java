@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.ExceptionHandling;
+package com.proyectogrado.plataforma.auth.ExceptionHandling;
 
 public class UsernameNotFoundException extends RuntimeException {
     public UsernameNotFoundException(String message) {

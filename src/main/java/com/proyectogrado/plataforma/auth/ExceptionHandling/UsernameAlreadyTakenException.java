@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.ExceptionHandling;
+package com.proyectogrado.plataforma.auth.ExceptionHandling;
 
 public class UsernameAlreadyTakenException extends RuntimeException {
     public UsernameAlreadyTakenException(String message) {

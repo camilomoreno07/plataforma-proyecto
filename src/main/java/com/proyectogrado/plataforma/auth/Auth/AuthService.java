@@ -1,8 +1,8 @@
-package com.proyectogrado.plataforma.Auth;
+package com.proyectogrado.plataforma.auth.Auth;
 
-import com.proyectogrado.plataforma.Jwt.JwtService;
-import com.proyectogrado.plataforma.Entities.User;
-import com.proyectogrado.plataforma.Entities.UserRepository;
+import com.proyectogrado.plataforma.auth.Jwt.JwtService;
+import com.proyectogrado.plataforma.auth.Entities.User;
+import com.proyectogrado.plataforma.auth.Entities.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

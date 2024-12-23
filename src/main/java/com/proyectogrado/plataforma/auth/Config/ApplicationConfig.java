@@ -1,6 +1,6 @@
-package com.proyectogrado.plataforma.Config;
+package com.proyectogrado.plataforma.auth.Config;
 
-import com.proyectogrado.plataforma.Entities.UserRepository;
+import com.proyectogrado.plataforma.auth.Entities.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

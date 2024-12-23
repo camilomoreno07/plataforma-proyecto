@@ -1,6 +1,6 @@
-package com.proyectogrado.plataforma.Auth;
+package com.proyectogrado.plataforma.auth.Auth;
 
-import com.proyectogrado.plataforma.Entities.Role;
+import com.proyectogrado.plataforma.auth.Entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

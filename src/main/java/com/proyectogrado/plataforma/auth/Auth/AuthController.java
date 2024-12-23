@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.Auth;
+package com.proyectogrado.plataforma.auth.Auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

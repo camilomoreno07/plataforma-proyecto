@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.Entities;
+package com.proyectogrado.plataforma.auth.Entities;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

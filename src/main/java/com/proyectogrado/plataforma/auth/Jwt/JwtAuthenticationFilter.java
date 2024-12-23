@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.Jwt;
+package com.proyectogrado.plataforma.auth.Jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
