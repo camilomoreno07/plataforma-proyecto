@@ -1,4 +1,4 @@
-package com.proyectogrado.plataforma.courses.Model;
+package com.proyectogrado.plataforma.course.Model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

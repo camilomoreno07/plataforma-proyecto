@@ -1,7 +1,7 @@
-package com.proyectogrado.plataforma.courses.Service;
+package com.proyectogrado.plataforma.course.Service;
 
-import com.proyectogrado.plataforma.courses.Model.Course;
-import com.proyectogrado.plataforma.courses.Repository.CourseRepository;
+import com.proyectogrado.plataforma.course.Model.Course;
+import com.proyectogrado.plataforma.course.Repository.CourseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

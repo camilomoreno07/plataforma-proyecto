@@ -1,8 +1,8 @@
-package com.proyectogrado.plataforma.courses.Controller;
+package com.proyectogrado.plataforma.course.Controller;
 
 
-import com.proyectogrado.plataforma.courses.Model.Course;
-import com.proyectogrado.plataforma.courses.Service.CourseService;
+import com.proyectogrado.plataforma.course.Model.Course;
+import com.proyectogrado.plataforma.course.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/courses")
 public class CourseController {
+
     @Autowired
     private CourseService service;
 
@@ -47,4 +48,5 @@ public class CourseController {
         service.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
 }
