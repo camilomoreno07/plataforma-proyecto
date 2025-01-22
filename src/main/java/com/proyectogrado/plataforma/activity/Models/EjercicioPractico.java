@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "ejercicio_practico")
 public class EjercicioPractico {
+
     @Id
     private String id;
     private String titulo;
@@ -18,4 +19,5 @@ public class EjercicioPractico {
     private ContenidoProcedural contenidoProcedural;
     private ContenidoSoporte contenidoSoporte;
     private EstrategiaEvaluacion estrategiaEvaluacion;
+
 }

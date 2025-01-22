@@ -13,7 +13,7 @@ public class Grade {
 
     @Id
     private String gradeId;
-    private String student;
+    private String studentId;
     private String evaluationType;
     private String result;
 

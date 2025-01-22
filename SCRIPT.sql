@@ -1,3 +1,4 @@
+CREATE DATABASE universidad;
 CREATE TABLE `universidad`.`user` (
   `id` INT auto_increment NOT NULL,
   `username` VARCHAR(45) NOT NULL,
