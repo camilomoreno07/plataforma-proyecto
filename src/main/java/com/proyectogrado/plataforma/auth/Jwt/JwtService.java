@@ -1,6 +1,7 @@
 package com.proyectogrado.plataforma.auth.Jwt;
 
 
+import com.proyectogrado.plataforma.auth.Entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,7 +23,11 @@ public class JwtService {
     private static final long TOKEN_EXPIRATION = 1000 * 60 * 60; // 1 hour expiration
 
     public String getToken(UserDetails user) {
-        return getToken(new HashMap<>(), user);
+        Map<String, Object> extraClaims = new HashMap<>();
+        if (user instanceof User) {
+            extraClaims.put("role", ((User) user).getRole().name()); // Agrega el rol al token
+        }
+        return getToken(extraClaims, user);
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user){
