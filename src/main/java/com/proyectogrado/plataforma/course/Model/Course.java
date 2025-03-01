@@ -15,6 +15,8 @@ public class Course {
     private String courseName;
     private List<String> professorIds;
     private List<String> studentIds;
-    private List<String> activityIds;
+    private ClassMoment beforeClass;
+    private ClassMoment duringClass;
+    private ClassMoment afterClass;
 
 }

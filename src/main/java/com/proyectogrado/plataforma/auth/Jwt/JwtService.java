@@ -30,15 +30,18 @@ public class JwtService {
         return getToken(extraClaims, user);
     }
 
-    private String getToken(Map<String, Object> extraClaims, UserDetails user){
+    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+        // Ensure getKey() returns a Key object (e.g., SecretKey)
+        Key key = getKey();
+
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .setClaims(extraClaims) // Add custom claims
+                .setSubject(user.getUsername()) // Set subject (username)
+                .setIssuedAt(new Date(System.currentTimeMillis())) // Set issued at time
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION)) // Set expiration time
+                .signWith(key, SignatureAlgorithm.HS256) // Sign with the key and algorithm
+                .compact(); // Compact into a JWT string
     }
 
     private Key getKey(){
@@ -55,9 +58,9 @@ public class JwtService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    private Claims getAllClaims(String token){
+    private Claims getAllClaims(String token) {
         return Jwts
-                .parser()
+                .parserBuilder()
                 .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
