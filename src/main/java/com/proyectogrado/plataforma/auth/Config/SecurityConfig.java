@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
                 .authorizeHttpRequests(authRequest -> authRequest
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/media/**").permitAll() // QUITAR ESTO LUEGO
                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager -> sessionManager
