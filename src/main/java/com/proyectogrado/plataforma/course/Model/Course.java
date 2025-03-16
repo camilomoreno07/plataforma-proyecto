@@ -13,10 +13,12 @@ public class Course {
     @Id
     private String courseId;
     private String courseName;
+    private String courseDescription;
     private List<String> professorIds;
     private List<String> studentIds;
     private ClassMoment beforeClass;
     private ClassMoment duringClass;
     private ClassMoment afterClass;
+    private Boolean isPublic;
 
 }

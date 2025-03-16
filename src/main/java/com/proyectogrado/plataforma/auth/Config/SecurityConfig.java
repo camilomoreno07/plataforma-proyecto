@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -19,24 +19,21 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-
+    private final CorsConfigurationSource corsConfigurationSource; // Inyecta la configuración de CORS
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf ->
-                        csrf.disable())
-                .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Usa la configuración de CORS personalizada
                 .authorizeHttpRequests(authRequest -> authRequest
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/media/**").permitAll() // QUITAR ESTO LUEGO
-                .anyRequest().authenticated()
+                        .requestMatchers("/auth/**").permitAll() // Permite acceso sin autenticación a estas rutas
+                        .anyRequest().authenticated() // El resto de las rutas requieren autenticación
                 )
                 .sessionManagement(sessionManager -> sessionManager
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
 }
