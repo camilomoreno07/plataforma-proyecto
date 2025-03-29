@@ -16,7 +16,7 @@ public class MediaFileService
     private MediaFileRepository mediaFileRepository;
 
     // Esto toma la carpeta Downloads del disco C por defecto
-    private String UPLOAD_DIR = System.getProperty("user.home") + "/Downloads/";
+    private String UPLOAD_DIR = System.getProperty("user.home") + "\\Downloads\\pruebas\\";
 
     public String saveFile(MultipartFile file)
     {

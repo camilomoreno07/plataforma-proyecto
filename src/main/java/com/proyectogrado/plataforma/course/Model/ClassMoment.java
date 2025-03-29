@@ -9,7 +9,7 @@ import java.util.List;
 @Document(collection = "classmoment")
 public class ClassMoment {
 
-    private Instruction instruction;
+    private Instruction instructions;
     private List<Content> contents;
     private List<Evaluation> evaluations;
 

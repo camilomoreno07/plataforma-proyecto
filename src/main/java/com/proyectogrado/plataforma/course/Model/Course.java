@@ -20,5 +20,6 @@ public class Course {
     private ClassMoment duringClass;
     private ClassMoment afterClass;
     private Boolean isPublic;
+    private String imageUrl;
 
 }
