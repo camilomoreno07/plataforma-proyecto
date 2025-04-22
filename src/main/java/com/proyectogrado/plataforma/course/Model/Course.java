@@ -21,5 +21,8 @@ public class Course {
     private ClassMoment afterClass;
     private Boolean isPublic;
     private String imageUrl;
-
+    private MomentStatus momentStatus;
+    private String teacherName;
+    private String teacherTitle;
+    private String teacherEmail;
 }

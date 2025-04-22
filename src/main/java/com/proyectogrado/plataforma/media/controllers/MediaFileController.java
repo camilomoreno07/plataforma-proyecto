@@ -61,4 +61,28 @@ public class MediaFileController {
         }
     }
 
+    @DeleteMapping("/files/{filename:.+}")
+    public ResponseEntity<?> deleteFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(System.getProperty("user.dir"), "uploads").resolve(filename).normalize();
+            File file = filePath.toFile();
+
+            if (file.exists()) {
+                if (file.delete()) {
+                    return ResponseEntity.ok(Map.of("message", "Archivo eliminado exitosamente"));
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(Map.of("error", "No se pudo eliminar el archivo"));
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Archivo no encontrado"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error eliminando archivo: " + e.getMessage()));
+        }
+    }
+
+
 }

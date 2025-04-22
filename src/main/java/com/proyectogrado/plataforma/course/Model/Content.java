@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 public class Content {
 
-
     private String contentTitle;
     private String contentDescription;
     private Integer time;
