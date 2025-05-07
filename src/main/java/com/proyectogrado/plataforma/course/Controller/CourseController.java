@@ -1,11 +1,14 @@
 package com.proyectogrado.plataforma.course.Controller;
 
-
 import com.proyectogrado.plataforma.course.Model.Course;
 import com.proyectogrado.plataforma.course.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,15 +21,44 @@ public class CourseController {
 
     @GetMapping
     public List<Course> getAllCourses() {
-        return service.findAll();
+        String currentUsername = getCurrentUsername();
+        List<String> currentRoles = getCurrentUserRoles();
+
+        // Si es ADMIN, devuelve todos los cursos
+        if (currentRoles.contains("ADMIN")) {
+            return service.findAll();
+        }
+
+        return service.findAll()
+                .stream()
+                .filter(course ->
+                        (course.getStudentIds() != null && course.getStudentIds().contains(currentUsername)) ||
+                                (course.getProfessorIds() != null && course.getProfessorIds().contains(currentUsername))
+                )
+                .toList();
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable String id) {
         return service.findById(id)
-                .map(ResponseEntity::ok)
+                .map(course -> {
+                    String currentUsername = getCurrentUsername();
+                    List<String> currentRoles = getCurrentUserRoles();
+
+                    boolean isStudentEnrolled = course.getStudentIds() != null && course.getStudentIds().contains(currentUsername);
+                    boolean isProfessorAssigned = course.getProfessorIds() != null && course.getProfessorIds().contains(currentUsername);
+                    boolean isAdmin = currentRoles.contains("ADMIN");
+
+                    if (!(isStudentEnrolled || isProfessorAssigned || isAdmin)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes acceso a este curso");
+                    }
+
+                    return ResponseEntity.ok(course);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
     @PostMapping
     public Course createCourse(@RequestBody Course course) {
@@ -48,5 +80,26 @@ public class CourseController {
         service.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+    // Función para obtener el usuario autenticado
+    private String getCurrentUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
+    }
+
+    private List<String> getCurrentUserRoles() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails userDetails) {
+            return userDetails.getAuthorities().stream()
+                    .map(authority -> authority.getAuthority())
+                    .toList();
+        }
+        return List.of();
+    }
+
 
 }
