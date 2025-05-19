@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -50,9 +49,19 @@ public class MediaFileController {
             Path filePath = Paths.get(System.getProperty("user.dir"), "uploads").resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
-            // Quita validaciones problemáticas
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // 🔥 Detecta el tipo MIME (image/png, application/pdf, etc.)
+            String contentType = java.nio.file.Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // fallback
+            }
+
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, contentType)
                     .body(resource);
 
         } catch (Exception e) {
@@ -60,6 +69,7 @@ public class MediaFileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @DeleteMapping("/files/{filename:.+}")
     public ResponseEntity<?> deleteFile(@PathVariable String filename) {
