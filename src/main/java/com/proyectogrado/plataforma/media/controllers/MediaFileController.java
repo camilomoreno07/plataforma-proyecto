@@ -153,6 +153,30 @@ public class MediaFileController {
         }
     }
 
+    @DeleteMapping("/experiences/{experience}")
+    public ResponseEntity<?> deleteExperience(@PathVariable("experience") String experience)
+    {
+        try {
+            Path directoryPath = Paths.get(System.getProperty("user.dir"), "/uploads/experiences").resolve(experience).normalize();
+            File directory = directoryPath.toFile();
+
+            if (directory.exists() && directory.isDirectory()) {
+                if (deleteFileRecursively(directory)) {
+                    return ResponseEntity.ok(Map.of("message", "Experiencia eliminada exitosamente"));
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(Map.of("error", "No se pudo eliminar la experiencia"));
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Experiencia no encontrada"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error eliminando la experiencia: " + e.getMessage()));
+        }
+    }
+
     private Path validateZipEntry(Path targetDir, ZipEntry entry, Map<String, Boolean> expectedStructure) throws IOException
     {
         String name = entry.getName();
@@ -177,5 +201,18 @@ public class MediaFileController {
         }
 
         return resolvedPath;
+    }
+
+    private boolean deleteFileRecursively(File file)
+    {
+        File[] content = file.listFiles();
+        if(content != null)
+        {
+            for (File item : content)
+            {
+                deleteFileRecursively(item);
+            }
+        }
+        return file.delete();
     }
 }
