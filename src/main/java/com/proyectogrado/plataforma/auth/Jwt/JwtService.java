@@ -1,8 +1,8 @@
 package com.proyectogrado.plataforma.auth.Jwt;
 
-
 import com.proyectogrado.plataforma.auth.Entities.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final String SECRET_KEY = "dGVzdFNlY3JldEtleTEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=";
-    private static final long TOKEN_EXPIRATION = 1000 * 60 * 60; // 1 hour expiration
+    private static final long TOKEN_EXPIRATION = 1000 * 60 * 60 * 24; // 1 hour expiration
 
     public String getToken(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
@@ -59,13 +59,19 @@ public class JwtService {
     }
 
     private Claims getAllClaims(String token) {
-        return Jwts
-                .parser()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parser()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            // log o maneja como gustes
+            throw e;
+        }
     }
+
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = getAllClaims(token);

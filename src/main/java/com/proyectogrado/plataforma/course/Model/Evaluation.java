@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Evaluation {
 
     private String question;
-    private String questionDescription;
+    private String correctAnswer;
     private Integer time;
 
 }
