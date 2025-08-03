@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Usa la configuración de CORS personalizada
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/auth/**").permitAll() // Permite acceso sin autenticación a estas rutas
+                        .requestMatchers("/media/experiences/*/index.html").permitAll()
                         .anyRequest().authenticated() // El resto de las rutas requieren autenticación
                 )
                 .sessionManagement(sessionManager -> sessionManager
