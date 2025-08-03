@@ -6,6 +6,7 @@ import com.proyectogrado.plataforma.progress.Model.Progress;
 import com.proyectogrado.plataforma.progress.Repository.ProgressRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.bson.Document;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -121,4 +122,8 @@ public class CourseService {
         }
     }
 
+    public Document findStudentWithCourses(String username)
+    {
+        return courseRepository.findStudentWithCourses(username);
+    }
 }
