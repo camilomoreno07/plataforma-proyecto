@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/media/experiences/**").permitAll()
                         .anyRequest().authenticated() // El resto de las rutas requieren autenticación
                 )
+                .headers(headers -> headers.frameOptions().disable())
                 .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
