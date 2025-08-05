@@ -10,5 +10,6 @@ public class Evaluation {
     private String question;
     private String questionDescription;
     private Integer time;
+    private String experienceUrl;
 
 }
