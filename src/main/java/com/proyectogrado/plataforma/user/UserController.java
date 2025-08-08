@@ -1,14 +1,16 @@
 package com.proyectogrado.plataforma.user;
 
+import com.proyectogrado.plataforma.auth.Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import com.proyectogrado.plataforma.auth.Entities.User;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,6 +35,14 @@ public class UserController
         {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta informacion");
         }
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username)
+    {
+        return service.findByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Función para obtener el usuario autenticado
