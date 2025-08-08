@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Component
+@ActiveProfiles("test")
 public class TestDataLoader implements CommandLineRunner
 {
     @Autowired

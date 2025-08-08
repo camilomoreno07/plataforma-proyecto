@@ -12,8 +12,10 @@ import de.flapdoodle.embed.process.runtime.Network;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ActiveProfiles;
 
 @TestConfiguration
+@ActiveProfiles("test")
 public class EmbedMongoConfig
 {
     private MongodExecutable mongodExecutable;
