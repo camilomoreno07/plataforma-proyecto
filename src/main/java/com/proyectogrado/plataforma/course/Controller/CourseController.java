@@ -94,7 +94,7 @@ public class CourseController {
 
         if (!(isAdmin || isAuthorizedStudent))
         {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para acceder a esta informacion");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "No tienes permiso para acceder a esta informacion"));
         }
 
         Document document = service.findStudentWithCourses(studentUsername);
