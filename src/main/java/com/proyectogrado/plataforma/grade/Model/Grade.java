@@ -14,7 +14,10 @@ public class Grade {
     @Id
     private String gradeId;
     private String studentId;
-    private String evaluationType;
-    private String result;
+    private String courseId;
+    private ClassMoment aulaVirtual;
+    private ClassMoment tallerHabilidad;
+    private ClassMoment actividadExperiencial;
+
 
 }

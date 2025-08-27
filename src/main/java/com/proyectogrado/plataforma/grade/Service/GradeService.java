@@ -1,5 +1,6 @@
 package com.proyectogrado.plataforma.grade.Service;
 
+import com.mongodb.client.MongoIterable;
 import com.proyectogrado.plataforma.grade.Model.Grade;
 import com.proyectogrado.plataforma.grade.Repository.GradeRepository;
 import lombok.AllArgsConstructor;
@@ -30,5 +31,9 @@ public class GradeService {
 
     public void deleteById(String id) {
         repository.deleteById(id);
+    }
+
+    public Optional<Grade> findByStudentIdAndCourseId(String studentId, String courseId) {
+        return repository.findByStudentIdAndCourseId(studentId, courseId);
     }
 }

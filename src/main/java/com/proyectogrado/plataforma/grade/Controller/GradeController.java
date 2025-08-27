@@ -27,6 +27,16 @@ public class GradeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/student/{studentId}/course/{courseId}")
+    public ResponseEntity<Grade> getGradeByStudentAndCourse(
+            @PathVariable String studentId,
+            @PathVariable String courseId) {
+        return service.findByStudentIdAndCourseId(studentId, courseId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
     @PostMapping
     public Grade createGrade(@RequestBody Grade grade) {
         return service.save(grade);
