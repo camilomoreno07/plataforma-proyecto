@@ -1,6 +1,7 @@
 package com.proyectogrado.plataforma.course.Service;
 
 import com.proyectogrado.plataforma.course.Model.Course;
+import com.proyectogrado.plataforma.course.Model.ReuseRequest;
 import com.proyectogrado.plataforma.course.Repository.CourseRepository;
 import com.proyectogrado.plataforma.progress.Model.Progress;
 import com.proyectogrado.plataforma.progress.Repository.ProgressRepository;
@@ -60,6 +61,56 @@ public class CourseService {
 
         return savedCourse;
     }
+
+    public Course reuseCourse(String sourceId, String targetId, ReuseRequest.Reuse reuse) {
+        Course source = courseRepository.findById(sourceId)
+                .orElseThrow(() -> new RuntimeException("Curso fuente no encontrado"));
+
+        Course target = courseRepository.findById(targetId)
+                .orElseThrow(() -> new RuntimeException("Curso destino no encontrado"));
+
+        // Antes de clase
+        if (reuse.getBeforeClass() != null) {
+            if (reuse.getBeforeClass().isInstructions() && source.getBeforeClass() != null) {
+                target.getBeforeClass().setInstructions(source.getBeforeClass().getInstructions());
+            }
+            if (reuse.getBeforeClass().isContents() && source.getBeforeClass() != null) {
+                target.getBeforeClass().setContents(source.getBeforeClass().getContents());
+            }
+            if (reuse.getBeforeClass().isEvaluations() && source.getBeforeClass() != null) {
+                target.getBeforeClass().setEvaluations(source.getBeforeClass().getEvaluations());
+            }
+        }
+
+        // Durante la clase
+        if (reuse.getDuringClass() != null) {
+            if (reuse.getDuringClass().isInstructions() && source.getDuringClass() != null) {
+                target.getDuringClass().setInstructions(source.getDuringClass().getInstructions());
+            }
+            if (reuse.getDuringClass().isContents() && source.getDuringClass() != null) {
+                target.getDuringClass().setContents(source.getDuringClass().getContents());
+            }
+            if (reuse.getDuringClass().isEvaluations() && source.getDuringClass() != null) {
+                target.getDuringClass().setEvaluations(source.getDuringClass().getEvaluations());
+            }
+        }
+
+        // Después de clase
+        if (reuse.getAfterClass() != null) {
+            if (reuse.getAfterClass().isInstructions() && source.getAfterClass() != null) {
+                target.getAfterClass().setInstructions(source.getAfterClass().getInstructions());
+            }
+            if (reuse.getAfterClass().isContents() && source.getAfterClass() != null) {
+                target.getAfterClass().setContents(source.getAfterClass().getContents());
+            }
+            if (reuse.getAfterClass().isEvaluations() && source.getAfterClass() != null) {
+                target.getAfterClass().setEvaluations(source.getAfterClass().getEvaluations());
+            }
+        }
+
+        return courseRepository.save(target);
+    }
+
 
     public void deleteById(String id) {
         Optional<Course> optionalCourse = courseRepository.findById(id);

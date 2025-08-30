@@ -1,6 +1,7 @@
 package com.proyectogrado.plataforma.course.Controller;
 
 import com.proyectogrado.plataforma.course.Model.Course;
+import com.proyectogrado.plataforma.course.Model.ReuseRequest;
 import com.proyectogrado.plataforma.course.Service.CourseService;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,21 @@ public class CourseController {
     public Course createCourse(@RequestBody Course course) {
         return service.save(course);
     }
+
+    @PostMapping("/reuse")
+    public ResponseEntity<Course> reuseCourse(@RequestBody ReuseRequest request) {
+        try {
+            Course updated = service.reuseCourse(
+                    request.getSourceCourseId(),
+                    request.getTargetCourseId(),
+                    request.getReuse()
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable String id, @RequestBody Course course) {
