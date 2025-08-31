@@ -11,5 +11,5 @@ import java.util.List;
 public class ClassMoment {
 
     private List<Question> questions;
-
+    private String grade;
 }
