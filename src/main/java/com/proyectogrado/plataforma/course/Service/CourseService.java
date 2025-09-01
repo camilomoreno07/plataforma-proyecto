@@ -1,8 +1,10 @@
 package com.proyectogrado.plataforma.course.Service;
 
+import com.proyectogrado.plataforma.course.Model.ClassMoment;
 import com.proyectogrado.plataforma.course.Model.Course;
 import com.proyectogrado.plataforma.course.Model.ReuseRequest;
 import com.proyectogrado.plataforma.course.Repository.CourseRepository;
+import com.proyectogrado.plataforma.progress.Model.MomentProgress;
 import com.proyectogrado.plataforma.progress.Model.Progress;
 import com.proyectogrado.plataforma.progress.Repository.ProgressRepository;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Service
 @AllArgsConstructor
@@ -40,22 +44,22 @@ public class CourseService {
 
         // Crear progreso para cada estudiante si no existe aún
         if (savedCourse.getStudentIds() != null) {
-            for (String studentEmail : savedCourse.getStudentIds()) {
-                boolean progressAlreadyExists = studentCourseProgressRepository
-                        .existsByCourseIdAndStudentEmail(savedCourse.getCourseId(), studentEmail);
+            for (String studentId : savedCourse.getStudentIds())
+            {
+                Progress progress = studentCourseProgressRepository.findByCourseIdAndStudentId(savedCourse.getCourseId(), studentId)
+                        .orElse(new Progress());
 
-                if (!progressAlreadyExists) {
-                    Progress progress = new Progress();
-                    progress.setCourseId(savedCourse.getCourseId());
-                    progress.setStudentEmail(studentEmail);
-                    progress.setProgressStatus("pendiente");
-                    progress.setCompletedEvaluations(new java.util.ArrayList<>());
-                    progress.setCurrentStep(null);
-                    progress.setStartedAt(LocalDateTime.now());
-                    progress.setCompletedAt(null);
+                progress.setCourseId(savedCourse.getCourseId());
+                progress.setStudentId(studentId);
 
-                    studentCourseProgressRepository.save(progress);
-                }
+                Function<Function<Course, ClassMoment>, Integer> buildMomentProgress = classMomentMapper ->
+                        Optional.of(savedCourse).map(classMomentMapper).map(ClassMoment::getContents).map(List::size).orElse(0);
+
+                progress.setAulaInvertida(new MomentProgress(buildMomentProgress.apply(Course::getBeforeClass)));
+                progress.setTallerHabilidad(new MomentProgress(buildMomentProgress.apply(Course::getDuringClass)));
+                progress.setActividadExperiencial(new MomentProgress(buildMomentProgress.apply(Course::getAfterClass)));
+
+                studentCourseProgressRepository.save(progress);
             }
         }
 

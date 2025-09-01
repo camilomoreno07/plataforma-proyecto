@@ -46,12 +46,12 @@ class GradeControllerTest {
         q2.setResponse("Answer 2");
         q2.setFeedback("Feedback 2");
 
-        ClassMoment aulaVirtual = new ClassMoment();
-        aulaVirtual.setQuestions(List.of(q1, q2));
+        ClassMoment aulaInvertida = new ClassMoment();
+        aulaInvertida.setQuestions(List.of(q1, q2));
 
         Grade grade = new Grade();
         grade.setStudentId(studentId);
-        grade.setAulaVirtual(aulaVirtual);
+        grade.setAulaInvertida(aulaInvertida);
 
         return grade;
     }
@@ -92,7 +92,7 @@ class GradeControllerTest {
                 .statusCode(200)
                 .body("gradeId", Matchers.equalTo(created.getGradeId()))
                 .body("studentId", Matchers.equalTo("student1@gmail.com"))
-                .body("aulaVirtual.questions.size()", Matchers.equalTo(2));
+                .body("aulaInvertida.questions.size()", Matchers.equalTo(2));
 
         given()
                 .header("Authorization", "Bearer " + TEACHER_TOKEN)
@@ -118,8 +118,8 @@ class GradeControllerTest {
                 .as(Grade.class);
 
         Assertions.assertEquals("student2@gmail.com", created.getStudentId());
-        Assertions.assertNotNull(created.getAulaVirtual());
-        Assertions.assertEquals(2, created.getAulaVirtual().getQuestions().size());
+        Assertions.assertNotNull(created.getAulaInvertida());
+        Assertions.assertEquals(2, created.getAulaInvertida().getQuestions().size());
 
         given()
                 .header("Authorization", "Bearer " + TEACHER_TOKEN)
@@ -145,7 +145,7 @@ class GradeControllerTest {
                 .as(Grade.class);
 
         // update one question's feedback
-        created.getAulaVirtual().getQuestions().get(0).setFeedback("Updated Feedback");
+        created.getAulaInvertida().getQuestions().get(0).setFeedback("Updated Feedback");
 
         Grade updated = given()
                 .header("Authorization", "Bearer " + TEACHER_TOKEN)
@@ -158,7 +158,7 @@ class GradeControllerTest {
                 .extract()
                 .as(Grade.class);
 
-        Assertions.assertEquals("Updated Feedback", updated.getAulaVirtual().getQuestions().get(0).getFeedback());
+        Assertions.assertEquals("Updated Feedback", updated.getAulaInvertida().getQuestions().get(0).getFeedback());
 
         given()
                 .header("Authorization", "Bearer " + TEACHER_TOKEN)

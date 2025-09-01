@@ -35,12 +35,12 @@ class GradeServiceTest
         q3.setResponse("Answer 3");
         q3.setFeedback("Feedback 3");
 
-        ClassMoment aulaVirtual = new ClassMoment();
-        aulaVirtual.setQuestions(List.of(q1, q2, q3));
+        ClassMoment aulaInvertida = new ClassMoment();
+        aulaInvertida.setQuestions(List.of(q1, q2, q3));
 
         Grade grade = new Grade();
         grade.setStudentId(studentId);
-        grade.setAulaVirtual(aulaVirtual);
+        grade.setAulaInvertida(aulaInvertida);
 
         return grade;
     }
@@ -67,8 +67,8 @@ class GradeServiceTest
 
         Assertions.assertNotNull(foundGrade);
         Assertions.assertEquals(newGrade.getStudentId(), foundGrade.getStudentId());
-        Assertions.assertNotNull(foundGrade.getAulaVirtual());
-        Assertions.assertEquals(3, foundGrade.getAulaVirtual().getQuestions().size());
+        Assertions.assertNotNull(foundGrade.getAulaInvertida());
+        Assertions.assertEquals(3, foundGrade.getAulaInvertida().getQuestions().size());
 
         gradeService.deleteById(newGrade.getGradeId());
     }

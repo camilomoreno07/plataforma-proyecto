@@ -15,9 +15,8 @@ public class Grade {
     private String gradeId;
     private String studentId;
     private String courseId;
-    private ClassMoment aulaVirtual;
+    private ClassMoment aulaInvertida;
     private ClassMoment tallerHabilidad;
     private ClassMoment actividadExperiencial;
-
 
 }
