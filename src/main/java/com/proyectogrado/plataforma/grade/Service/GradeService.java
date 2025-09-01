@@ -1,6 +1,5 @@
 package com.proyectogrado.plataforma.grade.Service;
 
-import com.mongodb.client.MongoIterable;
 import com.proyectogrado.plataforma.grade.Model.Grade;
 import com.proyectogrado.plataforma.grade.Repository.GradeRepository;
 import lombok.AllArgsConstructor;
@@ -35,5 +34,16 @@ public class GradeService {
 
     public Optional<Grade> findByStudentIdAndCourseId(String studentId, String courseId) {
         return repository.findByStudentIdAndCourseId(studentId, courseId);
+    }
+
+    public Optional<Grade> updateByStudentAndCourse(String studentId, String courseId, Grade updatedGrade)
+    {
+        return repository.findByStudentIdAndCourseId(studentId, courseId)
+                .map(existingGrade -> {
+                    updatedGrade.setGradeId(existingGrade.getGradeId());
+                    updatedGrade.setStudentId(studentId);
+                    updatedGrade.setCourseId(courseId);
+                    return repository.save(updatedGrade);
+                });
     }
 }

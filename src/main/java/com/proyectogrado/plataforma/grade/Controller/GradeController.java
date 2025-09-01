@@ -36,7 +36,6 @@ public class GradeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @PostMapping
     public Grade createGrade(@RequestBody Grade grade) {
         return service.save(grade);
@@ -49,6 +48,16 @@ public class GradeController {
                     grade.setGradeId(id);
                     return ResponseEntity.ok(service.save(grade));
                 })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/student/{studentId}/course/{courseId}")
+    public ResponseEntity<Grade> updateGradeByStudentAndCourse(
+            @PathVariable String studentId,
+            @PathVariable String courseId,
+            @RequestBody Grade grade) {
+        return service.updateByStudentAndCourse(studentId, courseId, grade)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
