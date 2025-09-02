@@ -1,8 +1,6 @@
 package com.proyectogrado.plataforma.course.Service;
 
-import com.proyectogrado.plataforma.course.Model.ClassMoment;
-import com.proyectogrado.plataforma.course.Model.Course;
-import com.proyectogrado.plataforma.course.Model.ReuseRequest;
+import com.proyectogrado.plataforma.course.Model.*;
 import com.proyectogrado.plataforma.course.Repository.CourseRepository;
 import com.proyectogrado.plataforma.progress.Model.MomentProgress;
 import com.proyectogrado.plataforma.progress.Model.Progress;
@@ -55,9 +53,28 @@ public class CourseService {
                 Function<Function<Course, ClassMoment>, Integer> buildMomentProgress = classMomentMapper ->
                         Optional.of(savedCourse).map(classMomentMapper).map(ClassMoment::getContents).map(List::size).orElse(0);
 
-                progress.setAulaInvertida(new MomentProgress(buildMomentProgress.apply(Course::getBeforeClass)));
-                progress.setTallerHabilidad(new MomentProgress(buildMomentProgress.apply(Course::getDuringClass)));
-                progress.setActividadExperiencial(new MomentProgress(buildMomentProgress.apply(Course::getAfterClass)));
+                // For NA Contents or Evaluations
+                Function<Function<Course, ClassMoment>, Integer> calculateOmittedMoments = classMomentMapper -> {
+                    int omittedMoments = 0;
+
+                    List<Content> contents = Optional.of(course).map(classMomentMapper).map(ClassMoment::getContents).orElse(null);
+                    if(contents != null && contents.size() == 1 && (contents.get(0).getContentTitle().equals("NA") || contents.get(0).getContentTitle().equals("Sin Experiencia")))
+                    {
+                        omittedMoments++;
+                    }
+
+                    List<Evaluation> evaluations = Optional.of(course).map(classMomentMapper).map(ClassMoment::getEvaluations).orElse(null);
+                    if(evaluations != null && evaluations.size() == 1 && evaluations.get(0).getQuestion().equals("NA"))
+                    {
+                        omittedMoments++;
+                    }
+
+                    return omittedMoments;
+                };
+
+                progress.setAulaInvertida(new MomentProgress(buildMomentProgress.apply(Course::getBeforeClass), calculateOmittedMoments.apply(Course::getBeforeClass)));
+                progress.setTallerHabilidad(new MomentProgress(buildMomentProgress.apply(Course::getDuringClass), calculateOmittedMoments.apply(Course::getDuringClass)));
+                progress.setActividadExperiencial(new MomentProgress(buildMomentProgress.apply(Course::getAfterClass), calculateOmittedMoments.apply(Course::getAfterClass)));
 
                 studentCourseProgressRepository.save(progress);
             }
