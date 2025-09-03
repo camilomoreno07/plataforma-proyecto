@@ -2,6 +2,7 @@ package com.proyectogrado.plataforma.course.Service;
 
 import com.proyectogrado.plataforma.course.Model.*;
 import com.proyectogrado.plataforma.course.Repository.CourseRepository;
+import com.proyectogrado.plataforma.grade.Repository.GradeRepository;
 import com.proyectogrado.plataforma.progress.Model.MomentProgress;
 import com.proyectogrado.plataforma.progress.Model.Progress;
 import com.proyectogrado.plataforma.progress.Repository.ProgressRepository;
@@ -28,6 +29,9 @@ public class CourseService {
 
     @Autowired
     private ProgressRepository studentCourseProgressRepository;
+
+    @Autowired
+    private GradeRepository studentGradeRepository;
 
     public List<Course> findAll() {
         return courseRepository.findAll();
@@ -76,6 +80,7 @@ public class CourseService {
                 progress.setTallerHabilidad(new MomentProgress(buildMomentProgress.apply(Course::getDuringClass), calculateOmittedMoments.apply(Course::getDuringClass)));
                 progress.setActividadExperiencial(new MomentProgress(buildMomentProgress.apply(Course::getAfterClass), calculateOmittedMoments.apply(Course::getAfterClass)));
 
+                studentGradeRepository.deleteByCourseId(course.getCourseId());
                 studentCourseProgressRepository.save(progress);
             }
         }
@@ -129,7 +134,7 @@ public class CourseService {
             }
         }
 
-        return courseRepository.save(target);
+        return save(target);
     }
 
 
@@ -189,7 +194,10 @@ public class CourseService {
             // 3. Eliminar progresos de estudiantes
             studentCourseProgressRepository.deleteByCourseId(course.getCourseId());
 
-            // 4. Finalmente eliminar el curso
+            // 4. Eliminar notas de estudiantes
+            studentGradeRepository.deleteByCourseId(course.getCourseId());
+
+            // 5. Finalmente eliminar el curso
             courseRepository.deleteById(id);
         }
     }

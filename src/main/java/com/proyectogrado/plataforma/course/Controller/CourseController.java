@@ -41,7 +41,6 @@ public class CourseController {
                 .toList();
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable String id) {
         return service.findById(id)
@@ -67,21 +66,6 @@ public class CourseController {
     public Course createCourse(@RequestBody Course course) {
         return service.save(course);
     }
-
-    @PostMapping("/reuse")
-    public ResponseEntity<Course> reuseCourse(@RequestBody ReuseRequest request) {
-        try {
-            Course updated = service.reuseCourse(
-                    request.getSourceCourseId(),
-                    request.getTargetCourseId(),
-                    request.getReuse()
-            );
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable String id, @RequestBody Course course) {
@@ -125,6 +109,50 @@ public class CourseController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    // Reuse endpoints
+
+    @PostMapping("/reuse")
+    public ResponseEntity<Course> reuseCourse(@RequestBody ReuseRequest request) {
+        try {
+            Course updated = service.reuseCourse(
+                    request.getSourceCourseId(),
+                    request.getTargetCourseId(),
+                    request.getReuse()
+            );
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/reuse")
+    public List<Course> getAllCoursesForReuse() {
+        List<String> currentRoles = getCurrentUserRoles();
+        boolean isAdminOrTeacher = currentRoles.contains("ADMIN") || currentRoles.contains("TEACHER");
+
+        if (!isAdminOrTeacher) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes acceso a este curso");
+        }
+
+        return service.findAll();
+    }
+
+    @GetMapping("/reuse/{id}")
+    public ResponseEntity<Course> getCourseByIdForReuse(@PathVariable String id) {
+        return service.findById(id)
+                .map(course -> {
+                    List<String> currentRoles = getCurrentUserRoles();
+                    boolean isAdminOrTeacher = currentRoles.contains("ADMIN") || currentRoles.contains("TEACHER");
+
+                    if (!isAdminOrTeacher) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes acceso a este curso");
+                    }
+
+                    return ResponseEntity.ok(course);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Función para obtener el usuario autenticado

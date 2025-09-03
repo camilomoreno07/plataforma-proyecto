@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface GradeRepository extends MongoRepository<Grade, String> {
     Optional<Grade> findByStudentIdAndCourseId(String studentId, String courseId);
+    void deleteByCourseId(String courseId);
 }
