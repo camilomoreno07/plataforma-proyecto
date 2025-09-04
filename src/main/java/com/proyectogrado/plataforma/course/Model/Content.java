@@ -15,5 +15,6 @@ public class Content {
     private String imageUrl;
     private String fileType;
     private String experienceUrl;
+    private String moduleName;
 
 }
