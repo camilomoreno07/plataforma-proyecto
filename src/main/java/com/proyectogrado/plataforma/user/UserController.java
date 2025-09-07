@@ -1,15 +1,13 @@
 package com.proyectogrado.plataforma.user;
 
 import com.proyectogrado.plataforma.auth.Entities.User;
+import com.proyectogrado.plataforma.auth.ExceptionHandling.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -43,6 +41,38 @@ public class UserController
         return service.findByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Delete a user by username
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String username)
+    {
+        List<String> currentRoles = getCurrentUserRoles();
+        if (currentRoles.contains("ADMIN")) {
+            service.deleteByUsername(username);
+            return ResponseEntity.noContent().build();
+        }
+        else
+        {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para eliminar usuarios.");
+        }
+    }
+
+    // Update a user by username
+    @PutMapping("/{username}")
+    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody User updatedUser)
+    {
+        List<String> currentRoles = getCurrentUserRoles();
+        if (currentRoles.contains("ADMIN")) {
+            try {
+                User updated = service.updateUser(username, updatedUser);
+                return ResponseEntity.ok(updated);
+            } catch (UsernameNotFoundException ex) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Return 404 if user is not found
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso para actualizar usuarios.");
+        }
     }
 
     // Función para obtener el usuario autenticado

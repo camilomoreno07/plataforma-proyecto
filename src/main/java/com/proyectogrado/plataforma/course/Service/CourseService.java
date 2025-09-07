@@ -202,6 +202,22 @@ public class CourseService {
         }
     }
 
+    public void deleteUserFromCourses(String username) {
+        // Remove from professorIds
+        List<Course> professorCourses = courseRepository.findByProfessorIdsContaining(username);
+        for (Course course : professorCourses) {
+            course.getProfessorIds().remove(username);
+            courseRepository.save(course);
+        }
+
+        // Remove from studentIds
+        List<Course> studentCourses = courseRepository.findByStudentIdsContaining(username);
+        for (Course course : studentCourses) {
+            course.getStudentIds().remove(username);
+            courseRepository.save(course);
+        }
+    }
+
     public Document findStudentWithCourses(String username)
     {
         return courseRepository.findStudentWithCourses(username);

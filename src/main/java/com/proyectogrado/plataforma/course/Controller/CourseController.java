@@ -155,6 +155,16 @@ public class CourseController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/deleteUserFromCourses/{username}")
+    public ResponseEntity<Void> deleteUserFromCourses(@PathVariable String username) {
+        try {
+            service.deleteUserFromCourses(username);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     // Función para obtener el usuario autenticado
     private String getCurrentUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
